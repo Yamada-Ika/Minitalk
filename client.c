@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/11/25 11:50:29 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/07 03:52:30 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ int	ft_send_str_to_process(pid_t pid, char *str)
 
 int	main(int argc, char *argv[])
 {
-	pid_t	pid;
+	pid_t	server_pid;
+	pid_t	client_pid;
 	char	*str;
 
 	if (argc != 3 || argv == NULL)
@@ -72,13 +73,16 @@ int	main(int argc, char *argv[])
 		write(STDERR_FILENO, "Invalid argument!\n", 18);
 		return (-1);
 	}
-	pid = (pid_t)atoi(argv[1]);
-	if (pid < PID_MIN)
+	server_pid = (pid_t)atoi(argv[1]);
+	if (server_pid < PID_MIN)
 	{
 		write(STDERR_FILENO, "Invalid PID!\n", 13);
 		return (-1);
 	}
 	str = argv[2];
-	if (ft_send_str_to_process(pid, str) == SEND_FAILE)
+	client_pid = getpid();
+	if (ft_send_data_to_pid(server_pid, client_pid, sizeof(int) * BYTE) == SEND_FAILE)
+		return (SEND_FAILE);
+	if (ft_send_str_to_process(server_pid, str) == SEND_FAILE)
 		return (SEND_FAILE);
 }
