@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/11/29 15:51:31 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/09 04:14:27 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,5 +97,6 @@ int	main(void)
 	signal(SIGUSR2, sig_handler);
 	while (1)
 	{
+		pause();
 	}
 }
