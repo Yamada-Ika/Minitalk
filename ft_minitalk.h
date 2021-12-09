@@ -6,14 +6,14 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:15:54 by iyamada           #+#    #+#             */
-/*   Updated: 2021/11/25 11:51:53 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/09 13:32:56 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_MINITALK_H
 # define FT_MINITALK_H
 
-# define SLEEP_TIME 1000
+# define SLEEP_TIME 100
 # define BYTE 8
 # define EOT 0x04
 # define PID_MIN 0
@@ -27,7 +27,5 @@
 # include <stdlib.h>
 # include <signal.h>
 # include <string.h>
-
-int	ft_pow(int base, int expo);
 
 #endif

@@ -3,7 +3,7 @@ CFLAGS		:= -Wall -Wextra -Werror #-g -fsanitize=address
 
 SERVER		:= server
 CLIENT		:= client
-SERVER_SRCS	:= server.c ft_server_utils.c
+SERVER_SRCS	:= server.c
 CLIENT_SRCS	:= client.c
 
 all: name

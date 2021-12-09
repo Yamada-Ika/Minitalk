@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/09 04:14:27 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/09 13:32:26 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,8 @@ void	sig_handler(int	signal)
 	static t_receive_info	receive;
 	static char				*receive_str;
 
+	receive.decimal_num += (signal - SIGUSR1) << receive.bit_count;
 	receive.bit_count++;
-	receive.decimal_num += ((signal - SIGUSR1)
-			* ft_pow(2, receive.bit_count - 1));
 	if (receive.is_str_len_sent == 0 && receive.bit_count == sizeof(int) * BYTE)
 	{
 		ft_receive_str_malloc(&receive_str, receive.decimal_num);
