@@ -3,8 +3,8 @@ CFLAGS		:= -Wall -Wextra -Werror
 
 SERVER		:= server
 CLIENT		:= client
-SERVER_SRCS	:= server.c
-CLIENT_SRCS	:= client.c
+SERVER_SRCS	:= server_bonus.c
+CLIENT_SRCS	:= client_bonus.c
 
 all: NAME
 
