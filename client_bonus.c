@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 14:54:01 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 14:57:18 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,31 +16,23 @@
 void	sig_handler(int signal)
 {
 	if (signal == SIGUSR1)
-	{
 		printf("SIGUSR1 received!\n");
-	}
 	if (signal == SIGUSR2)
-	{
 		printf("SIGUSR2 received!\n");
-	}
 }
 
 int	ft_kill(pid_t pid, int signal, int num)
 {
 	if (signal == SIGUSR1)
-	{
 		printf("SIGUSR1 sent! %d\n", num + 1);
-	}
 	if (signal == SIGUSR2)
-	{
 		printf("SIGUSR2 sent! %d\n", num + 1);
-	}
 	return (kill(pid, signal));
 }
 
 int	ft_send_data_to_pid(pid_t pid, int data, int size)
 {
-	int	usr_signal;
+	int	sig;
 	int	bit;
 	int	j;
 
@@ -49,10 +41,10 @@ int	ft_send_data_to_pid(pid_t pid, int data, int size)
 	{
 		bit = (data >> j) & 0b1;
 		if (bit == 0)
-			usr_signal = SIGUSR1;
+			sig = SIGUSR1;
 		if (bit == 1)
-			usr_signal = SIGUSR2;
-		if (ft_kill(pid, usr_signal, j) == KILL_FAILE)
+			sig = SIGUSR2;
+		if (ft_kill(pid, sig, j) == KILL_FAILE)
 		{
 			write(STDERR_FILENO, "Failed to send!\n", 16);
 			return (SEND_FAILE);
@@ -95,7 +87,7 @@ pid_t	ft_get_pid(char *s)
 	pid = (pid_t)strtoll(s, &end, 10);
 	if (strcmp(end, ""))
 		return (ERROR_PID);
-	if (pid < PID_MIN)
+	if (pid <= PID_MIN)
 		return (ERROR_PID);
 	return (pid);
 }
@@ -105,8 +97,8 @@ int	main(int argc, char *argv[])
 	pid_t	server_pid;
 	char	*str;
 
-	signal(SIGUSR1, sig_handler);
-	signal(SIGUSR2, sig_handler);
+	signal(SIGUSR1, print_receive_signal);
+	signal(SIGUSR2, print_receive_signal);
 	if (argc != 3 || argv == NULL)
 	{
 		write(STDERR_FILENO, "Invalid argument!\n", 18);
