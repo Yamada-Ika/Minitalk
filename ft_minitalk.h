@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:15:54 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 09:19:05 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 13:02:30 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # define BYTE 8
 # define EOT 0x04
 # define PID_MIN 0
+# define ERROR_PID -1
 # define KILL_FAILE -1
 # define SEND_FAILE -1
 # define SEND_SUCCESS 1

@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 10:24:08 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 13:20:31 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ int	ft_send_data_to_pid(pid_t pid, int data, int size)
 			signal = SIGUSR1;
 		if (bit == 1)
 			signal = SIGUSR2;
+		usleep(SLEEP_TIME);
 		if (kill(pid, signal) == KILL_FAILE)
 		{
 			write(STDERR_FILENO, "Failed to send!\n", 16);
 			return (SEND_FAILE);
 		}
-		usleep(SLEEP_TIME);
 		j++;
 	}
 	return (SEND_SUCCESS);
@@ -62,6 +62,19 @@ int	ft_send_str_to_process(pid_t pid, char *str)
 	return (SEND_SUCCESS);
 }
 
+pid_t	ft_get_pid(char *s)
+{
+	pid_t	pid;
+	char	*end;
+
+	pid = (pid_t)strtoll(s, &end, 10);
+	if (strcmp(end, ""))
+		return (ERROR_PID);
+	if (pid < PID_MIN)
+		return (ERROR_PID);
+	return (pid);
+}
+
 int	main(int argc, char *argv[])
 {
 	pid_t	pid;
@@ -70,13 +83,13 @@ int	main(int argc, char *argv[])
 	if (argc != 3 || argv == NULL)
 	{
 		write(STDERR_FILENO, "Invalid argument!\n", 18);
-		return (-1);
+		return (1);
 	}
-	pid = (pid_t)atoi(argv[1]);
-	if (pid <= PID_MIN)
+	pid = ft_get_pid(argv[1]);
+	if (pid == ERROR_PID)
 	{
 		write(STDERR_FILENO, "Invalid PID!\n", 13);
-		return (-1);
+		return (1);
 	}
 	str = argv[2];
 	if (ft_send_str_to_process(pid, str) == SEND_FAILE)
