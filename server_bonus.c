@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 14:42:14 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 14:50:42 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,12 @@ void	ft_init_receive_info(t_receive_info *rec_info, int flag)
 	if (flag == 2)
 	{
 		rec_info->is_str_len_sent = 0;
-		rec_info->is_pid_sent = 0;
-		rec_info->client_pid = 0;
 		rec_info->bit_count = 0;
 		rec_info->decimal_num = 0;
 		rec_info->str_index = 0;
 	}
 	if (flag == 3)
 	{
-		rec_info->is_pid_sent = 1;
 		rec_info->bit_count = 0;
 		rec_info->decimal_num = 0;
 		return ;
@@ -75,17 +72,10 @@ void	sig_handler(int sig, siginfo_t *info, void *ucontext)
 	static char				*receive_str;
 	int	tmp;
 
-	if (receive.is_pid_sent == 1)
-	{
-		kill(receive.client_pid, signal);
-	}
-	receive.decimal_num += (signal - SIGUSR1) << receive.bit_count;
+
+	kill(info->si_pid, sig);
+	receive.decimal_num += (sig - SIGUSR1) << receive.bit_count;
 	receive.bit_count++;
-	if (receive.is_pid_sent == 0 && receive.bit_count == sizeof(int) * BYTE)
-	{
-		receive.client_pid = receive.decimal_num;
-		ft_init_receive_info(&receive, 3);
-	}
 	if (receive.is_str_len_sent == 0 && receive.bit_count == sizeof(int) * BYTE)
 	{
 		tmp = receive.decimal_num;
