@@ -6,7 +6,11 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
+<<<<<<< HEAD:server_bonus.c
 /*   Updated: 2021/12/08 12:21:26 by iyamada          ###   ########.fr       */
+=======
+/*   Updated: 2021/12/19 10:16:33 by iyamada          ###   ########.fr       */
+>>>>>>> dev:server.c
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +25,11 @@ void	ft_init_receive_info(t_receive_info *rec_info, int flag)
 		rec_info->is_str_len_sent = 1;
 		rec_info->bit_count = 0;
 		rec_info->decimal_num = 0;
-		return ;
 	}
 	if (flag == 1)
 	{
 		rec_info->bit_count = 0;
 		rec_info->decimal_num = 0;
-		return ;
 	}
 	if (flag == 2)
 	{
@@ -59,16 +61,17 @@ void	ft_print_received_str(char *s)
 	free(s);
 }
 
-void	ft_receive_str_malloc(char **str, int str_len)
+bool	ft_receive_str_malloc(char **str, int str_len)
 {
 	// printf("str_len : %d\n", str_len);
 	*str = (char *)malloc((str_len + 1) * sizeof(char));
 	if (*str == NULL)
 	{
 		write(STDERR_FILENO, "Failed to memory allocate!\n", 28);
-		return ;
+		return (false);
 	}
 	(*str)[str_len] = '\0';
+	return (true);
 }
 
 void	sig_handler(int	signal)
@@ -129,6 +132,5 @@ int	main(void)
 	signal(SIGUSR1, sig_handler);
 	signal(SIGUSR2, sig_handler);
 	while (1)
-	{
-	}
+		pause();
 }

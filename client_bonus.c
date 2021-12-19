@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/08 12:15:25 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 13:30:28 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,19 @@ int	ft_send_str_to_process(pid_t pid, char *str)
 	return (SEND_SUCCESS);
 }
 
+pid_t	ft_get_pid(char *s)
+{
+	pid_t	pid;
+	char	*end;
+
+	pid = (pid_t)strtoll(s, &end, 10);
+	if (strcmp(end, ""))
+		return (ERROR_PID);
+	if (pid < PID_MIN)
+		return (ERROR_PID);
+	return (pid);
+}
+
 int	main(int argc, char *argv[])
 {
 	pid_t	server_pid;
@@ -101,13 +114,13 @@ int	main(int argc, char *argv[])
 	if (argc != 3 || argv == NULL)
 	{
 		write(STDERR_FILENO, "Invalid argument!\n", 18);
-		return (-1);
+		return (1);
 	}
-	server_pid = (pid_t)atoi(argv[1]);
-	if (server_pid < PID_MIN)
+	pid = ft_get_pid(argv[1]);
+	if (pid == ERROR_PID)
 	{
 		write(STDERR_FILENO, "Invalid PID!\n", 13);
-		return (-1);
+		return (1);
 	}
 	str = argv[2];
 	client_pid = getpid();
