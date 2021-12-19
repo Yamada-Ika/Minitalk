@@ -1,14 +1,14 @@
 CC			:= gcc
-CFLAGS		:= -Wall -Wextra -Werror #-g -fsanitize=address
+CFLAGS		:= -Wall -Wextra -Werror
 
 SERVER		:= server
 CLIENT		:= client
 SERVER_SRCS	:= server.c
 CLIENT_SRCS	:= client.c
 
-all: name
+all: NAME
 
-name: $(SERVER) $(CLIENT)
+NAME: $(SERVER) $(CLIENT)
 
 $(SERVER): $(SERVER_SRCS)
 	$(CC) $(CFLAGS) $(SERVER_SRCS) -o $(SERVER)

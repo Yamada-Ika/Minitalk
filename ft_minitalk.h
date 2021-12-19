@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:15:54 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/09 13:32:56 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 09:19:05 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,6 @@
 # include <stdlib.h>
 # include <signal.h>
 # include <string.h>
+# include <stdbool.h>
 
 #endif
