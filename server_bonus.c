@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 14:38:47 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 14:42:14 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	ft_print_received_str(char *s)
 
 bool	ft_receive_str_malloc(char **str, int str_len)
 {
-	// printf("str_len : %d\n", str_len);
 	*str = (char *)malloc((str_len + 1) * sizeof(char));
 	if (*str == NULL)
 	{
@@ -80,9 +79,8 @@ void	sig_handler(int sig, siginfo_t *info, void *ucontext)
 	{
 		kill(receive.client_pid, signal);
 	}
+	receive.decimal_num += (signal - SIGUSR1) << receive.bit_count;
 	receive.bit_count++;
-	receive.decimal_num += ((signal - SIGUSR1)
-			* ft_pow(2, receive.bit_count - 1));
 	if (receive.is_pid_sent == 0 && receive.bit_count == sizeof(int) * BYTE)
 	{
 		receive.client_pid = receive.decimal_num;
