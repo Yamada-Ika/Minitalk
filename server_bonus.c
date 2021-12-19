@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 14:50:42 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 15:04:07 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,6 @@ void	ft_init_receive_info(t_receive_info *rec_info, int flag)
 		rec_info->bit_count = 0;
 		rec_info->decimal_num = 0;
 		rec_info->str_index = 0;
-	}
-	if (flag == 3)
-	{
-		rec_info->bit_count = 0;
-		rec_info->decimal_num = 0;
-		return ;
 	}
 }
 
@@ -70,15 +64,12 @@ void	sig_handler(int sig, siginfo_t *info, void *ucontext)
 {
 	static t_receive_info	receive;
 	static char				*receive_str;
-	int	tmp;
-
 
 	kill(info->si_pid, sig);
 	receive.decimal_num += (sig - SIGUSR1) << receive.bit_count;
 	receive.bit_count++;
 	if (receive.is_str_len_sent == 0 && receive.bit_count == sizeof(int) * BYTE)
 	{
-		tmp = receive.decimal_num;
 		ft_init_receive_info(&receive, 0);
 		ft_receive_str_malloc(&receive_str, receive.decimal_num);
 		if (receive_str == NULL)
@@ -98,23 +89,16 @@ void	sig_handler(int sig, siginfo_t *info, void *ucontext)
 	}
 }
 
-void hoge(int sig, siginfo_t *info, void *ucontext)
-{
-	printf("info->si_pid : %d\n", info->si_pid);
-}
-
 int	main(void)
 {
-	struct	sigaction	sa;
+	struct	sigaction	act;
 
-	sigemptyset(&sa.sa_mask);
-	sa.sa_sigaction = sig_handler;
-	sa.sa_flags = SA_SIGINFO;
 	printf("PID : %d\n", getpid());
-	// signal(SIGUSR1, sig_handler);
-	// signal(SIGUSR2, sig_handler);
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
+	sigemptyset(&act.sa_mask);
+	act.sa_sigaction = sig_handler;
+	act.sa_flags = SA_SIGINFO;
+	sigaction(SIGUSR1, &act, NULL);
+	sigaction(SIGUSR2, &act, NULL);
 	while (1)
 		pause();
 }
