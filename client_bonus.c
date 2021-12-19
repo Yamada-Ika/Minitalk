@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 13:30:28 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 14:36:38 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,7 @@ int	ft_send_data_to_pid(pid_t pid, int data, int size)
 			write(STDERR_FILENO, "Failed to send!\n", 16);
 			return (SEND_FAILE);
 		}
-		// signal(SIGUSR1, sig_handler);
-		// signal(SIGUSR2, sig_handler);
 		usleep(1000);
-		// pause();
 		j++;
 	}
 	return (SEND_SUCCESS);

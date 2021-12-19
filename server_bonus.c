@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 13:34:45 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 14:38:47 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ bool	ft_receive_str_malloc(char **str, int str_len)
 	return (true);
 }
 
-void	sig_handler(int	signal)
+void	sig_handler(int sig, siginfo_t *info, void *ucontext)
 {
 	static t_receive_info	receive;
 	static char				*receive_str;
@@ -78,34 +78,23 @@ void	sig_handler(int	signal)
 
 	if (receive.is_pid_sent == 1)
 	{
-		// usleep(100);
 		kill(receive.client_pid, signal);
 	}
 	receive.bit_count++;
 	receive.decimal_num += ((signal - SIGUSR1)
 			* ft_pow(2, receive.bit_count - 1));
-	// if (signal == SIGUSR1)
-	// 	printf("SIGUSR1 received! %d\n", receive.bit_count);
-	// if (signal == SIGUSR2)
-	// 	printf("SIGUSR2 received! %d\n", receive.bit_count);
-	// printf("bit : %d\n", signal - SIGUSR1);
-	// printf("receive.decimal_num : %d\n", receive.decimal_num);
 	if (receive.is_pid_sent == 0 && receive.bit_count == sizeof(int) * BYTE)
 	{
 		receive.client_pid = receive.decimal_num;
-		// printf("receive.client_pid : %d\n", receive.client_pid);
 		ft_init_receive_info(&receive, 3);
 	}
 	if (receive.is_str_len_sent == 0 && receive.bit_count == sizeof(int) * BYTE)
 	{
-		// printf("receive.decimal_num : %d\n", receive.decimal_num);
-		// printf("receive.bit_count : %d\n", receive.bit_count);
 		tmp = receive.decimal_num;
 		ft_init_receive_info(&receive, 0);
 		ft_receive_str_malloc(&receive_str, receive.decimal_num);
 		if (receive_str == NULL)
 			return ;
-		// ft_init_receive_info(&receive, 0);
 	}
 	else if (receive.is_str_len_sent == 1 && receive.bit_count == BYTE)
 	{
@@ -115,18 +104,29 @@ void	sig_handler(int	signal)
 			ft_init_receive_info(&receive, 2);
 			return ;
 		}
-		// printf("receive.decimal_num : %d\n", receive.decimal_num);
 		receive_str[receive.str_index] = (char)(receive.decimal_num);
 		receive.str_index++;
 		ft_init_receive_info(&receive, 1);
 	}
 }
 
+void hoge(int sig, siginfo_t *info, void *ucontext)
+{
+	printf("info->si_pid : %d\n", info->si_pid);
+}
+
 int	main(void)
 {
+	struct	sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_sigaction = sig_handler;
+	sa.sa_flags = SA_SIGINFO;
 	printf("PID : %d\n", getpid());
-	signal(SIGUSR1, sig_handler);
-	signal(SIGUSR2, sig_handler);
+	// signal(SIGUSR1, sig_handler);
+	// signal(SIGUSR2, sig_handler);
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
 	while (1)
 		pause();
 }
