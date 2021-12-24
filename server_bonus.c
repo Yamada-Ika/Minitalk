@@ -38,7 +38,6 @@ void	ft_init_receive_info(int flag)
 	}
 }
 
-
 void	ft_print_str(void)
 {
 	int	str_len;
@@ -73,7 +72,7 @@ void	sig_handler(int sig, siginfo_t *info, void *ucontext)
 
 int	main(void)
 {
-	struct	sigaction	act;
+	struct sigaction	act;
 
 	printf("PID : %d\n", getpid());
 	sigemptyset(&act.sa_mask);
@@ -104,3 +103,4 @@ int	main(void)
 		}
 	}
 }
+

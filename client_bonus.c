@@ -16,17 +16,17 @@
 void	print_receive_signal(int signal)
 {
 	if (signal == SIGUSR1)
-		printf("SIGUSR1 received!\n");
+		write(STDOUT_FILENO, "SIGUSR1 received!\n", 28);
 	if (signal == SIGUSR2)
-		printf("SIGUSR2 received!\n");
+		write(STDOUT_FILENO, "SIGUSR2 received!\n", 28);
 }
 
 int	ft_kill(pid_t pid, int signal, int num)
 {
 	if (signal == SIGUSR1)
-		printf("SIGUSR1 sent! %d\n", num + 1);
+		write(STDOUT_FILENO, "SIGUSR1 sent!\n", 14);
 	if (signal == SIGUSR2)
-		printf("SIGUSR2 sent! %d\n", num + 1);
+		write(STDOUT_FILENO, "SIGUSR2 sent!\n", 14);
 	return (kill(pid, signal));
 }
 
@@ -49,7 +49,7 @@ int	ft_send_data_to_pid(pid_t pid, int data, int size)
 			write(STDERR_FILENO, "Failed to send!\n", 16);
 			return (SEND_FAILE);
 		}
-		// pause();
+		pause();
 		usleep(500);
 		j++;
 	}
