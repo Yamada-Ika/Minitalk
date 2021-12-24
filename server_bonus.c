@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 15:04:07 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 18:54:24 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,15 @@ void	sig_handler(int sig, siginfo_t *info, void *ucontext)
 {
 	static t_receive_info	receive;
 	static char				*receive_str;
+	static int i = 0;
 
-	kill(info->si_pid, sig);
 	receive.decimal_num += (sig - SIGUSR1) << receive.bit_count;
 	receive.bit_count++;
+	i++;
+	usleep(100);
+	// printf("i %d\n", i);
+	printf("sig %d\n", sig);
+	kill(info->si_pid, sig);
 	if (receive.is_str_len_sent == 0 && receive.bit_count == sizeof(int) * BYTE)
 	{
 		ft_init_receive_info(&receive, 0);
