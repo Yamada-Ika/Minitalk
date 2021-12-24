@@ -16,49 +16,47 @@
 
 static t_receive_info	g_rec;
 
-void	ft_init_receive_info(t_receive_info *rec_info, int flag)
+void	ft_init_receive_info(int flag)
 {
 	if (flag == 0)
 	{
-		rec_info->is_len_sent = 1;
-		rec_info->bit_count = 0;
-		rec_info->decimal_num = 0;
+		g_rec.is_len_sent = 1;
+		g_rec.bit_count = 0;
+		g_rec.decimal_num = 0;
 	}
 	if (flag == 1)
 	{
-		rec_info->bit_count = 0;
-		rec_info->decimal_num = 0;
+		g_rec.bit_count = 0;
+		g_rec.decimal_num = 0;
 	}
 	if (flag == 2)
 	{
-		rec_info->is_len_sent = 0;
-		rec_info->bit_count = 0;
-		rec_info->decimal_num = 0;
-		rec_info->index = 0;
+		g_rec.is_len_sent = 0;
+		g_rec.bit_count = 0;
+		g_rec.decimal_num = 0;
+		g_rec.index = 0;
 	}
 }
 
-void	ft_print_g_recd_str(char *s)
+void	ft_print_str(void)
 {
-	int	s_len;
+	int	str_len;
 
-	if (s == NULL)
-		return ;
-	s_len = (int)strlen(s);
-	write(STDOUT_FILENO, s, s_len + 1);
+	str_len = (int)strlen(g_rec.str);
+	write(STDOUT_FILENO, g_rec.str, str_len + 1);
 	putc('\n', stdout);
-	free(s);
+	free(g_rec.str);
 }
 
-bool	ft_g_rec_str_malloc(char **str, int str_len)
+bool	ft_allocate_for_str(int str_len)
 {
-	*str = (char *)malloc((str_len + 1) * sizeof(char));
-	if (*str == NULL)
+	g_rec.str = (char *)malloc((str_len + 1) * sizeof(char));
+	if (g_rec.str == NULL)
 	{
 		write(STDERR_FILENO, "Failed to memory allocate!\n", 28);
 		return (false);
 	}
-	(*str)[str_len] = '\0';
+	g_rec.str[str_len] = '\0';
 	return (true);
 }
 
@@ -78,21 +76,21 @@ int	main(void)
 		pause();
 		if (g_rec.is_len_sent == 0 && g_rec.bit_count == sizeof(int) * BYTE)
 		{
-			if (ft_g_rec_str_malloc(&g_rec.str, g_rec.decimal_num) == false)
+			if (ft_allocate_for_str(g_rec.decimal_num) == false)
 				exit(1);
-			ft_init_receive_info(&g_rec, 0);
+			ft_init_receive_info(0);
 		}
 		else if (g_rec.is_len_sent == 1 && g_rec.bit_count == BYTE)
 		{
 			if (g_rec.decimal_num == EOT)
 			{
-				ft_print_g_recd_str(g_rec.str);
-				ft_init_receive_info(&g_rec, 2);
+				ft_print_str();
+				ft_init_receive_info(2);
 				continue ;
 			}
 			g_rec.str[g_rec.index] = (char)(g_rec.decimal_num);
 			g_rec.index++;
-			ft_init_receive_info(&g_rec, 1);
+			ft_init_receive_info(1);
 		}
 	}
 }
