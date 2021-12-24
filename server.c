@@ -48,8 +48,11 @@ void	ft_print_str(void)
 	free(g_rec.str);
 }
 
-bool	ft_allocate_for_str(int str_len)
+bool	ft_allocate_for_str(void)
 {
+	int	str_len;
+
+	str_len = g_rec.decimal_num;
 	g_rec.str = (char *)malloc((str_len + 1) * sizeof(char));
 	if (g_rec.str == NULL)
 	{
@@ -71,16 +74,16 @@ int	main(void)
 	printf("PID : %d\n", getpid());
 	signal(SIGUSR1, sig_handler);
 	signal(SIGUSR2, sig_handler);
-	while (1)
+	while (true)
 	{
 		pause();
-		if (g_rec.is_len_sent == 0 && g_rec.bit_count == sizeof(int) * BYTE)
+		if (!g_rec.is_len_sent && g_rec.bit_count == sizeof(int) * BYTE)
 		{
-			if (ft_allocate_for_str(g_rec.decimal_num) == false)
+			if (!ft_allocate_for_str())
 				exit(1);
 			ft_init_receive_info(0);
 		}
-		else if (g_rec.is_len_sent == 1 && g_rec.bit_count == BYTE)
+		else if (g_rec.is_len_sent && g_rec.bit_count == BYTE)
 		{
 			if (g_rec.decimal_num == EOT)
 			{
