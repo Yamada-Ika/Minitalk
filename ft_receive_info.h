@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 22:26:10 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 14:48:02 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/25 00:44:20 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ typedef struct s_receive_info
 	bool	is_len_sent;
 	char	*str;
 	int		index;
+	pid_t	client_pid;
+	int		signal;
 }	t_receive_info;
 
 #endif

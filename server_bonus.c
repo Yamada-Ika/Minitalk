@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 18:54:24 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/25 01:46:00 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,10 @@ void	sig_handler(int sig, siginfo_t *info, void *ucontext)
 {
 	g_rec.decimal_num += (sig - SIGUSR1) << g_rec.bit_count;
 	g_rec.bit_count++;
-	kill(info->si_pid, sig);
+	g_rec.client_pid = info->si_pid;
+	g_rec.signal = sig;
+	// write(STDOUT_FILENO, "called!\n", 9);
+	// kill(info->si_pid, sig);
 }
 
 int	main(void)
@@ -80,9 +83,11 @@ int	main(void)
 	act.sa_flags = SA_SIGINFO;
 	sigaction(SIGUSR1, &act, NULL);
 	sigaction(SIGUSR2, &act, NULL);
-	while (1)
+	while (true)
 	{
+		// write(STDOUT_FILENO, "paused!\n", 9);
 		pause();
+		// write(STDOUT_FILENO, "started!\n", 9);
 		if (!g_rec.is_len_sent && g_rec.bit_count == sizeof(int) * BYTE)
 		{
 			if (!ft_allocate_for_str())
@@ -95,12 +100,19 @@ int	main(void)
 			{
 				ft_print_str();
 				ft_init_receive_info(2);
+				// usleep(1000);
+				kill(g_rec.client_pid, g_rec.signal);
 				continue ;
 			}
 			g_rec.str[g_rec.index] = (char)(g_rec.decimal_num);
 			g_rec.index++;
+			// write(STDOUT_FILENO, &(g_rec.decimal_num), 1);
 			ft_init_receive_info(1);
 		}
+		// write(STDOUT_FILENO, "ready?...\n", 11);
+		// usleep(1000);
+		kill(g_rec.client_pid, g_rec.signal);
+		// write(STDOUT_FILENO, "sent!\n", 7);
 	}
 }
 

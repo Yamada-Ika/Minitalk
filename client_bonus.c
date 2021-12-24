@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 18:49:00 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/25 01:45:35 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,19 @@
 
 void	print_receive_signal(int signal)
 {
-	if (signal == SIGUSR1)
-		write(STDOUT_FILENO, "SIGUSR1 received!\n", 28);
-	if (signal == SIGUSR2)
-		write(STDOUT_FILENO, "SIGUSR2 received!\n", 28);
+	// if (signal == SIGUSR1)
+	// 	write(STDOUT_FILENO, "SIGUSR1 received!\n", 19);
+	// if (signal == SIGUSR2)
+	// 	write(STDOUT_FILENO, "SIGUSR2 received!\n", 19);
+	// write(STDOUT_FILENO, "called!\n", 9);
 }
 
 int	ft_kill(pid_t pid, int signal, int num)
 {
-	if (signal == SIGUSR1)
-		write(STDOUT_FILENO, "SIGUSR1 sent!\n", 14);
-	if (signal == SIGUSR2)
-		write(STDOUT_FILENO, "SIGUSR2 sent!\n", 14);
+	// if (signal == SIGUSR1)
+	// 	write(STDOUT_FILENO, "SIGUSR1 sent!\n", 15);
+	// if (signal == SIGUSR2)
+	// 	write(STDOUT_FILENO, "SIGUSR2 sent!\n", 15);
 	return (kill(pid, signal));
 }
 
@@ -50,7 +51,8 @@ int	ft_send_data_to_pid(pid_t pid, int data, int size)
 			return (SEND_FAILE);
 		}
 		pause();
-		usleep(500);
+		// pause();
+		// usleep(5000);
 		j++;
 	}
 	return (SEND_SUCCESS);
