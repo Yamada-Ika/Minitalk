@@ -7,6 +7,11 @@ CLIENT		:= client
 SERVER_SRCS	:= server.c
 CLIENT_SRCS	:= client.c
 
+ifdef WITH_BONUS
+SERVER_SRCS		:= server_bonus.c 
+CLIENT_SRCS		:= client_bonus.c
+endif
+
 all: $(NAME)
 
 $(NAME): $(SERVER) $(CLIENT)
@@ -16,6 +21,9 @@ $(SERVER): $(SERVER_SRCS)
 
 $(CLIENT): $(CLIENT_SRCS)
 	$(CC) $(CFLAGS) $(CLIENT_SRCS) -o $(CLIENT)
+
+bonus:
+	make WITH_BONUS=1
 
 clean:
 	rm -rf $(SERVER) $(CLIENT)
