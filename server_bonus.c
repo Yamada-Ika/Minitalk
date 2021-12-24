@@ -14,84 +14,61 @@
 #include "ft_receive_info.h"
 #include <stdio.h>
 
-void	ft_init_receive_info(t_receive_info *rec_info, int flag)
+static t_receive_info	g_rec;
+
+void	ft_init_receive_info(int flag)
 {
 	if (flag == 0)
 	{
-		rec_info->is_str_len_sent = 1;
-		rec_info->bit_count = 0;
-		rec_info->decimal_num = 0;
+		g_rec.is_len_sent = true;
+		g_rec.bit_count = 0;
+		g_rec.decimal_num = 0;
 	}
 	if (flag == 1)
 	{
-		rec_info->bit_count = 0;
-		rec_info->decimal_num = 0;
+		g_rec.bit_count = 0;
+		g_rec.decimal_num = 0;
 	}
 	if (flag == 2)
 	{
-		rec_info->is_str_len_sent = 0;
-		rec_info->bit_count = 0;
-		rec_info->decimal_num = 0;
-		rec_info->str_index = 0;
+		g_rec.is_len_sent = false;
+		g_rec.bit_count = 0;
+		g_rec.decimal_num = 0;
+		g_rec.index = 0;
 	}
 }
 
-void	ft_print_received_str(char *s)
-{
-	int	s_len;
 
-	if (s == NULL)
-		return ;
-	s_len = (int)strlen(s);
-	write(STDOUT_FILENO, s, s_len + 1);
+void	ft_print_str(void)
+{
+	int	str_len;
+
+	str_len = (int)strlen(g_rec.str);
+	write(STDOUT_FILENO, g_rec.str, str_len + 1);
 	putc('\n', stdout);
-	free(s);
+	free(g_rec.str);
 }
 
-bool	ft_receive_str_malloc(char **str, int str_len)
+bool	ft_allocate_for_str(void)
 {
-	*str = (char *)malloc((str_len + 1) * sizeof(char));
-	if (*str == NULL)
+	int	str_len;
+
+	str_len = g_rec.decimal_num;
+	g_rec.str = (char *)malloc((str_len + 1) * sizeof(char));
+	if (g_rec.str == NULL)
 	{
 		write(STDERR_FILENO, "Failed to memory allocate!\n", 28);
 		return (false);
 	}
-	(*str)[str_len] = '\0';
+	g_rec.str[str_len] = '\0';
 	return (true);
 }
 
 void	sig_handler(int sig, siginfo_t *info, void *ucontext)
 {
-	static t_receive_info	receive;
-	static char				*receive_str;
-	static int i = 0;
-
-	receive.decimal_num += (sig - SIGUSR1) << receive.bit_count;
-	receive.bit_count++;
-	i++;
-	usleep(100);
-	// printf("i %d\n", i);
-	printf("sig %d\n", sig);
+	g_rec.decimal_num += (sig - SIGUSR1) << g_rec.bit_count;
+	g_rec.bit_count++;
 	kill(info->si_pid, sig);
-	if (receive.is_str_len_sent == 0 && receive.bit_count == sizeof(int) * BYTE)
-	{
-		ft_init_receive_info(&receive, 0);
-		ft_receive_str_malloc(&receive_str, receive.decimal_num);
-		if (receive_str == NULL)
-			return ;
-	}
-	else if (receive.is_str_len_sent == 1 && receive.bit_count == BYTE)
-	{
-		if (receive.decimal_num == EOT)
-		{
-			ft_print_received_str(receive_str);
-			ft_init_receive_info(&receive, 2);
-			return ;
-		}
-		receive_str[receive.str_index] = (char)(receive.decimal_num);
-		receive.str_index++;
-		ft_init_receive_info(&receive, 1);
-	}
 }
 
 int	main(void)
@@ -105,5 +82,25 @@ int	main(void)
 	sigaction(SIGUSR1, &act, NULL);
 	sigaction(SIGUSR2, &act, NULL);
 	while (1)
+	{
 		pause();
+		if (!g_rec.is_len_sent && g_rec.bit_count == sizeof(int) * BYTE)
+		{
+			if (!ft_allocate_for_str())
+				exit(1);
+			ft_init_receive_info(0);
+		}
+		else if (g_rec.is_len_sent && g_rec.bit_count == BYTE)
+		{
+			if (g_rec.decimal_num == EOT)
+			{
+				ft_print_str();
+				ft_init_receive_info(2);
+				continue ;
+			}
+			g_rec.str[g_rec.index] = (char)(g_rec.decimal_num);
+			g_rec.index++;
+			ft_init_receive_info(1);
+		}
+	}
 }
