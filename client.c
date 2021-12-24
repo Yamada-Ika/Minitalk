@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 13:20:31 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/25 02:12:36 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ int	ft_send_data_to_pid(pid_t pid, int data, int size)
 			signal = SIGUSR1;
 		if (bit == 1)
 			signal = SIGUSR2;
-		usleep(SLEEP_TIME);
 		if (kill(pid, signal) == KILL_FAILE)
 		{
 			write(STDERR_FILENO, "Failed to send!\n", 16);
 			return (SEND_FAILE);
 		}
 		j++;
+		usleep(SLEEP_TIME);
 	}
 	return (SEND_SUCCESS);
 }
