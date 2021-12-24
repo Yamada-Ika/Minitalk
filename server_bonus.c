@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.c                                           :+:      :+:    :+:   */
+/*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 10:16:33 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 18:54:24 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,18 +60,25 @@ bool	ft_receive_str_malloc(char **str, int str_len)
 	return (true);
 }
 
-void	sig_handler(int	signal)
+void	sig_handler(int sig, siginfo_t *info, void *ucontext)
 {
 	static t_receive_info	receive;
 	static char				*receive_str;
+	static int i = 0;
 
-	receive.decimal_num += (signal - SIGUSR1) << receive.bit_count;
+	receive.decimal_num += (sig - SIGUSR1) << receive.bit_count;
 	receive.bit_count++;
+	i++;
+	usleep(100);
+	// printf("i %d\n", i);
+	printf("sig %d\n", sig);
+	kill(info->si_pid, sig);
 	if (receive.is_str_len_sent == 0 && receive.bit_count == sizeof(int) * BYTE)
 	{
-		if (ft_receive_str_malloc(&receive_str, receive.decimal_num) == false)
-			return ;
 		ft_init_receive_info(&receive, 0);
+		ft_receive_str_malloc(&receive_str, receive.decimal_num);
+		if (receive_str == NULL)
+			return ;
 	}
 	else if (receive.is_str_len_sent == 1 && receive.bit_count == BYTE)
 	{
@@ -89,9 +96,14 @@ void	sig_handler(int	signal)
 
 int	main(void)
 {
+	struct	sigaction	act;
+
 	printf("PID : %d\n", getpid());
-	signal(SIGUSR1, sig_handler);
-	signal(SIGUSR2, sig_handler);
+	sigemptyset(&act.sa_mask);
+	act.sa_sigaction = sig_handler;
+	act.sa_flags = SA_SIGINFO;
+	sigaction(SIGUSR1, &act, NULL);
+	sigaction(SIGUSR2, &act, NULL);
 	while (1)
 		pause();
 }

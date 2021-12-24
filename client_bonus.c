@@ -1,21 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/19 13:20:31 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/19 18:49:00 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minitalk.h"
 #include <stdio.h>
 
+void	print_receive_signal(int signal)
+{
+	if (signal == SIGUSR1)
+		printf("SIGUSR1 received!\n");
+	if (signal == SIGUSR2)
+		printf("SIGUSR2 received!\n");
+}
+
+int	ft_kill(pid_t pid, int signal, int num)
+{
+	if (signal == SIGUSR1)
+		printf("SIGUSR1 sent! %d\n", num + 1);
+	if (signal == SIGUSR2)
+		printf("SIGUSR2 sent! %d\n", num + 1);
+	return (kill(pid, signal));
+}
+
 int	ft_send_data_to_pid(pid_t pid, int data, int size)
 {
-	int	signal;
+	int	sig;
 	int	bit;
 	int	j;
 
@@ -24,15 +41,16 @@ int	ft_send_data_to_pid(pid_t pid, int data, int size)
 	{
 		bit = (data >> j) & 0b1;
 		if (bit == 0)
-			signal = SIGUSR1;
+			sig = SIGUSR1;
 		if (bit == 1)
-			signal = SIGUSR2;
-		usleep(SLEEP_TIME);
-		if (kill(pid, signal) == KILL_FAILE)
+			sig = SIGUSR2;
+		if (ft_kill(pid, sig, j) == KILL_FAILE)
 		{
 			write(STDERR_FILENO, "Failed to send!\n", 16);
 			return (SEND_FAILE);
 		}
+		// pause();
+		usleep(500);
 		j++;
 	}
 	return (SEND_SUCCESS);
@@ -70,28 +88,28 @@ pid_t	ft_get_pid(char *s)
 	pid = (pid_t)strtoll(s, &end, 10);
 	if (strcmp(end, ""))
 		return (ERROR_PID);
-	if (pid < PID_MIN)
+	if (pid <= PID_MIN)
 		return (ERROR_PID);
 	return (pid);
 }
 
 int	main(int argc, char *argv[])
 {
-	pid_t	pid;
-	char	*str;
+	pid_t	server_pid;
 
+	signal(SIGUSR1, print_receive_signal);
+	signal(SIGUSR2, print_receive_signal);
 	if (argc != 3 || argv == NULL)
 	{
 		write(STDERR_FILENO, "Invalid argument!\n", 18);
 		return (1);
 	}
-	pid = ft_get_pid(argv[1]);
-	if (pid == ERROR_PID)
+	server_pid = ft_get_pid(argv[1]);
+	if (server_pid == ERROR_PID)
 	{
 		write(STDERR_FILENO, "Invalid PID!\n", 13);
 		return (1);
 	}
-	str = argv[2];
-	if (ft_send_str_to_process(pid, str) == SEND_FAILE)
+	if (ft_send_str_to_process(server_pid, argv[2]) == SEND_FAILE)
 		return (SEND_FAILE);
 }

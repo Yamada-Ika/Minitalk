@@ -1,14 +1,15 @@
 CC			:= gcc
-CFLAGS		:= -Wall -Wextra -Werror
+CFLAGS		:= #-Wall -Wextra -Werror
 
+NAME		:= Minitalk
 SERVER		:= server
 CLIENT		:= client
 SERVER_SRCS	:= server_tmp.c
 CLIENT_SRCS	:= client_tmp.c
 
-all: NAME
+all: $(NAME)
 
-NAME: $(SERVER) $(CLIENT)
+$(NAME): $(SERVER) $(CLIENT)
 
 $(SERVER): $(SERVER_SRCS)
 	$(CC) $(CFLAGS) $(SERVER_SRCS) -o $(SERVER)
