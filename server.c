@@ -20,7 +20,7 @@ void	ft_init_receive_info(int flag)
 {
 	if (flag == 0)
 	{
-		g_rec.is_len_sent = 1;
+		g_rec.is_len_sent = true;
 		g_rec.bit_count = 0;
 		g_rec.decimal_num = 0;
 	}
@@ -31,7 +31,7 @@ void	ft_init_receive_info(int flag)
 	}
 	if (flag == 2)
 	{
-		g_rec.is_len_sent = 0;
+		g_rec.is_len_sent = false;
 		g_rec.bit_count = 0;
 		g_rec.decimal_num = 0;
 		g_rec.index = 0;
