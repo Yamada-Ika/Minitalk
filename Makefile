@@ -4,8 +4,8 @@ CFLAGS		:= #-Wall -Wextra -Werror
 NAME		:= Minitalk
 SERVER		:= server
 CLIENT		:= client
-SERVER_SRCS	:= server_tmp.c
-CLIENT_SRCS	:= client_tmp.c
+SERVER_SRCS	:= server.c
+CLIENT_SRCS	:= client.c
 
 all: $(NAME)
 
