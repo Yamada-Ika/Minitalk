@@ -17,7 +17,7 @@ typedef struct s_receive_info
 {
 	int		bit_count;
 	int		decimal_num;
-	int		is_str_len_sent;
+	int		is_len_sent;
 	char	*str;
 	int		index;
 }	t_receive_info;
