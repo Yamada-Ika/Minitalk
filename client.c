@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/25 02:12:36 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/25 21:21:10 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	ft_send_data_to_pid(pid_t pid, int data, int size)
 	j = 0;
 	while (j < size)
 	{
-		bit = (data >> j) & 0b1;
+		bit = (data >> j) & 1;
 		if (bit == 0)
 			signal = SIGUSR1;
 		if (bit == 1)
