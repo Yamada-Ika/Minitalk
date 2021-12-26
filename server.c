@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/27 00:56:09 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/27 01:08:26 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ static t_receive_info	g_rec;
 
 static void	ft_init_receive_info(int flag)
 {
-	g_rec.bit_count = 0;
-	g_rec.decimal_num = 0;
+	g_rec.bit_cnt = 0;
+	g_rec.decimal = 0;
 	if (flag == STR_LEN_SENT)
 		g_rec.is_len_sent = true;
 	if (flag == STR_SENT)
@@ -39,25 +39,24 @@ static void	ft_print_str(void)
 	free(g_rec.str);
 }
 
-static bool	ft_allocate_for_str(void)
+static void	ft_allocate_for_str(void)
 {
 	int	str_len;
 
-	str_len = g_rec.decimal_num;
+	str_len = g_rec.decimal;
 	g_rec.str = (char *)malloc((str_len + 1) * sizeof(char));
 	if (g_rec.str == NULL)
 	{
 		write(STDERR_FILENO, "Failed to memory allocate!\n", 28);
-		return (false);
+		exit(MEM_ERROR);
 	}
 	g_rec.str[str_len] = '\0';
-	return (true);
 }
 
 static void	sig_handler(int	signal)
 {
-	g_rec.decimal_num += (signal - SIGUSR1) << g_rec.bit_count;
-	g_rec.bit_count++;
+	g_rec.decimal += (signal - SIGUSR1) << g_rec.bit_cnt;
+	g_rec.bit_cnt++;
 }
 
 int	main(void)
@@ -68,21 +67,20 @@ int	main(void)
 	while (true)
 	{
 		pause();
-		if (!g_rec.is_len_sent && g_rec.bit_count == sizeof(size_t) * BYTE)
+		if (!g_rec.is_len_sent && g_rec.bit_cnt == sizeof(size_t) * BYTE)
 		{
-			if (!ft_allocate_for_str())
-				return (1);
+			ft_allocate_for_str();
 			ft_init_receive_info(STR_LEN_SENT);
 		}
-		else if (g_rec.is_len_sent && g_rec.bit_count == BYTE)
+		else if (g_rec.is_len_sent && g_rec.bit_cnt == BYTE)
 		{
-			if (g_rec.decimal_num == EOT)
+			if (g_rec.decimal == EOT)
 			{
 				ft_print_str();
 				ft_init_receive_info(STR_SENT);
 				continue ;
 			}
-			g_rec.str[g_rec.index] = (char)(g_rec.decimal_num);
+			g_rec.str[g_rec.index] = (char)(g_rec.decimal);
 			g_rec.index++;
 			ft_init_receive_info(CHAR_SENT);
 		}

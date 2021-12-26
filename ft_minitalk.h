@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:15:54 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/27 01:02:20 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/27 01:04:38 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 // Error status
 # define ARG_ERROR 1
 # define SEND_ERROR 2
+# define MEM_ERROR 1
 
 // flags
 # define STR_LEN_SENT 0

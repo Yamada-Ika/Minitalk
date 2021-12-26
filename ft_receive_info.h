@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 22:26:10 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/27 00:13:24 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/27 01:08:26 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 typedef struct s_receive_info
 {
-	int		bit_count;
-	int		decimal_num;
+	int		bit_cnt;
+	int		decimal;
 	bool	is_len_sent;
 	char	*str;
 	int		index;
