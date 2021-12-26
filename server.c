@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/25 02:12:34 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/27 00:56:09 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,20 @@
 
 static t_receive_info	g_rec;
 
-void	ft_init_receive_info(int flag)
+static void	ft_init_receive_info(int flag)
 {
-	if (flag == 0)
-	{
+	g_rec.bit_count = 0;
+	g_rec.decimal_num = 0;
+	if (flag == STR_LEN_SENT)
 		g_rec.is_len_sent = true;
-		g_rec.bit_count = 0;
-		g_rec.decimal_num = 0;
-	}
-	if (flag == 1)
-	{
-		g_rec.bit_count = 0;
-		g_rec.decimal_num = 0;
-	}
-	if (flag == 2)
+	if (flag == STR_SENT)
 	{
 		g_rec.is_len_sent = false;
-		g_rec.bit_count = 0;
-		g_rec.decimal_num = 0;
 		g_rec.index = 0;
 	}
 }
 
-void	ft_print_str(void)
+static void	ft_print_str(void)
 {
 	int	str_len;
 
@@ -48,7 +39,7 @@ void	ft_print_str(void)
 	free(g_rec.str);
 }
 
-bool	ft_allocate_for_str(void)
+static bool	ft_allocate_for_str(void)
 {
 	int	str_len;
 
@@ -63,7 +54,7 @@ bool	ft_allocate_for_str(void)
 	return (true);
 }
 
-void	sig_handler(int	signal)
+static void	sig_handler(int	signal)
 {
 	g_rec.decimal_num += (signal - SIGUSR1) << g_rec.bit_count;
 	g_rec.bit_count++;
@@ -77,23 +68,23 @@ int	main(void)
 	while (true)
 	{
 		pause();
-		if (!g_rec.is_len_sent && g_rec.bit_count == sizeof(int) * BYTE)
+		if (!g_rec.is_len_sent && g_rec.bit_count == sizeof(size_t) * BYTE)
 		{
 			if (!ft_allocate_for_str())
-				exit(1);
-			ft_init_receive_info(0);
+				return (1);
+			ft_init_receive_info(STR_LEN_SENT);
 		}
 		else if (g_rec.is_len_sent && g_rec.bit_count == BYTE)
 		{
 			if (g_rec.decimal_num == EOT)
 			{
 				ft_print_str();
-				ft_init_receive_info(2);
+				ft_init_receive_info(STR_SENT);
 				continue ;
 			}
 			g_rec.str[g_rec.index] = (char)(g_rec.decimal_num);
 			g_rec.index++;
-			ft_init_receive_info(1);
+			ft_init_receive_info(CHAR_SENT);
 		}
 	}
 }

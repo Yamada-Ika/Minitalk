@@ -6,18 +6,18 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/25 21:21:10 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/27 00:55:03 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minitalk.h"
 #include <stdio.h>
 
-int	ft_send_data_to_pid(pid_t pid, int data, int size)
+static void	ft_send_data(pid_t pid, size_t data, unsigned long size)
 {
-	int	signal;
-	int	bit;
-	int	j;
+	int		signal;
+	size_t	bit;
+	size_t	j;
 
 	j = 0;
 	while (j < size)
@@ -30,48 +30,39 @@ int	ft_send_data_to_pid(pid_t pid, int data, int size)
 		if (kill(pid, signal) == KILL_FAILE)
 		{
 			write(STDERR_FILENO, "Failed to send!\n", 16);
-			return (SEND_FAILE);
+			exit(SEND_ERROR);
 		}
-		j++;
 		usleep(SLEEP_TIME);
+		j++;
 	}
-	return (SEND_SUCCESS);
 }
 
-int	ft_send_str_to_process(pid_t pid, char *str)
+static void	ft_send_str(pid_t pid, char *str)
 {
 	size_t	i;
 	size_t	str_len;
-	char	c;
 
 	if (str == NULL)
-		return (-1);
+		return ;
 	i = 0;
 	str_len = strlen(str);
-	if (ft_send_data_to_pid(pid, (int)str_len, sizeof(int) * BYTE) == -1)
-		return (SEND_FAILE);
+	ft_send_data(pid, str_len, sizeof(size_t) * BYTE);
 	while (i < str_len)
 	{
-		c = str[i];
-		if (ft_send_data_to_pid(pid, c, BYTE) == SEND_FAILE)
-			return (SEND_FAILE);
+		ft_send_data(pid, str[i], BYTE);
 		i++;
 	}
-	if (ft_send_data_to_pid(pid, EOT, BYTE) == SEND_FAILE)
-		return (SEND_FAILE);
-	return (SEND_SUCCESS);
+	ft_send_data(pid, EOT, BYTE);
 }
 
-pid_t	ft_get_pid(char *s)
+static pid_t	ft_get_pid(char *s)
 {
 	pid_t	pid;
 	char	*end;
 
 	pid = (pid_t)strtoll(s, &end, 10);
-	if (strcmp(end, ""))
-		return (ERROR_PID);
-	if (pid < PID_MIN)
-		return (ERROR_PID);
+	if (strcmp(end, "") != 0 || pid <= PID_MIN)
+		exit(ARG_ERROR);
 	return (pid);
 }
 
@@ -80,18 +71,17 @@ int	main(int argc, char *argv[])
 	pid_t	pid;
 	char	*str;
 
-	if (argc != 3 || argv == NULL)
+	if (argc != 3)
 	{
 		write(STDERR_FILENO, "Invalid argument!\n", 18);
-		return (1);
+		return (ARG_ERROR);
 	}
 	pid = ft_get_pid(argv[1]);
 	if (pid == ERROR_PID)
 	{
 		write(STDERR_FILENO, "Invalid PID!\n", 13);
-		return (1);
+		return (ARG_ERROR);
 	}
 	str = argv[2];
-	if (ft_send_str_to_process(pid, str) == SEND_FAILE)
-		return (SEND_FAILE);
+	ft_send_str(pid, str);
 }
