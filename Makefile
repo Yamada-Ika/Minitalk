@@ -1,5 +1,5 @@
 CC			:= gcc
-CFLAGS		:= #-Wall -Wextra -Werror
+CFLAGS		:= -Wall -Wextra -Werror
 
 # printf
 PRINTF_DIR	:= ft_printf
@@ -13,7 +13,7 @@ SERVER_SRCS	:= server.c
 CLIENT_SRCS	:= client.c
 
 ifdef WITH_BONUS
-SERVER_SRCS		:= server_bonus.c 
+SERVER_SRCS		:= server_bonus.c
 CLIENT_SRCS		:= client_bonus.c
 endif
 
