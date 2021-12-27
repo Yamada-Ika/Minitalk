@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:15:54 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/27 01:04:38 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/27 14:39:55 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 # define CHAR_SENT 1
 # define STR_SENT 2
 
+# include "ft_printf/ft_printf.h"
 # include <sys/types.h>
 # include <errno.h>
 # include <unistd.h>
@@ -39,5 +40,17 @@
 # include <signal.h>
 # include <string.h>
 # include <stdbool.h>
+# include <stdio.h>
+
+typedef struct s_receive_info
+{
+	volatile sig_atomic_t	bit_cnt;
+	volatile sig_atomic_t	decimal;
+	bool					is_len_sent;
+	char					*str;
+	int						index;
+	pid_t					client_pid;
+	int						signal;
+}	t_receive_info;
 
 #endif

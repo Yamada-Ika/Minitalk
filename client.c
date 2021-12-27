@@ -6,12 +6,11 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/27 00:55:03 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/27 14:22:29 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minitalk.h"
-#include <stdio.h>
 
 static void	ft_send_data(pid_t pid, size_t data, unsigned long size)
 {

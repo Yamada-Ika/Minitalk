@@ -6,13 +6,11 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/27 01:08:26 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/27 14:41:56 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minitalk.h"
-#include "ft_receive_info.h"
-#include <stdio.h>
 
 static t_receive_info	g_rec;
 
@@ -31,11 +29,8 @@ static void	ft_init_receive_info(int flag)
 
 static void	ft_print_str(void)
 {
-	int	str_len;
-
-	str_len = (int)strlen(g_rec.str);
-	write(STDOUT_FILENO, g_rec.str, str_len + 1);
-	putc('\n', stdout);
+	ft_putstr(g_rec.str);
+	ft_putchar('\n');
 	free(g_rec.str);
 }
 
@@ -47,7 +42,7 @@ static void	ft_allocate_for_str(void)
 	g_rec.str = (char *)malloc((str_len + 1) * sizeof(char));
 	if (g_rec.str == NULL)
 	{
-		write(STDERR_FILENO, "Failed to memory allocate!\n", 28);
+		ft_putstr_fd("Failed to memory allocate!\n", STDERR_FILENO);
 		exit(MEM_ERROR);
 	}
 	g_rec.str[str_len] = '\0';
@@ -61,7 +56,7 @@ static void	sig_handler(int	signal)
 
 int	main(void)
 {
-	printf("PID : %d\n", getpid());
+	ft_printf("PID : %d\n", getpid());
 	signal(SIGUSR1, sig_handler);
 	signal(SIGUSR2, sig_handler);
 	while (true)

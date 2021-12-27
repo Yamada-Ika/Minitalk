@@ -1,6 +1,11 @@
 CC			:= gcc
 CFLAGS		:= #-Wall -Wextra -Werror
 
+# printf
+PRINTF_DIR	:= ft_printf
+PRINTF		:= libftprintf.a
+PRINTF		:= $(addprefix $(PRINTF_DIR)/, $(PRINTF))
+
 NAME		:= Minitalk
 SERVER		:= server
 CLIENT		:= client
@@ -14,13 +19,18 @@ endif
 
 all: $(NAME)
 
-$(NAME): $(SERVER) $(CLIENT)
+$(NAME): $(PRINTF) $(SERVER) $(CLIENT)
+
+$(PRINTF): empty
+	make -C $(PRINTF_DIR)
+
+empty:
 
 $(SERVER): $(SERVER_SRCS)
-	$(CC) $(CFLAGS) $(SERVER_SRCS) -o $(SERVER)
+	$(CC) -o $(SERVER) $(CFLAGS) $(SERVER_SRCS) $(PRINTF)
 
 $(CLIENT): $(CLIENT_SRCS)
-	$(CC) $(CFLAGS) $(CLIENT_SRCS) -o $(CLIENT)
+	$(CC) -o $(CLIENT) $(CFLAGS) $(CLIENT_SRCS) $(PRINTF)
 
 bonus:
 	make WITH_BONUS=1
@@ -33,4 +43,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re empty
