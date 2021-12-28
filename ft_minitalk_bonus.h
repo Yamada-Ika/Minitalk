@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_minitalk.h                                      :+:      :+:    :+:   */
+/*   ft_minitalk_bonus.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:15:54 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/27 14:55:43 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/28 16:29:07 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_MINITALK_H
-# define FT_MINITALK_H
+#ifndef FT_MINITALK_BONUS_H
+# define FT_MINITALK_BONUS_H
 
 # define SLEEP_TIME 200
 # define BYTE 8
@@ -26,6 +26,7 @@
 # define ARG_ERROR 1
 # define SEND_ERROR 2
 # define MEM_ERROR 1
+# define SIG_ERROR 3
 
 // flags
 # define STR_LEN_SENT 0
@@ -45,11 +46,10 @@
 typedef struct s_receive_info
 {
 	int		bit_cnt;
-	int		decimal;
+	size_t	decimal;
 	bool	is_len_sent;
 	char	*str;
-	int		index;
-	pid_t	client_pid;
+	size_t	index;
 }	t_receive_info;
 
 #endif

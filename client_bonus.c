@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/28 01:49:15 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/28 16:28:20 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 
 volatile sig_atomic_t	g_sig;
 
-void	print_receive_signal(int signal)
+void	get_signal_from_server(int signal)
 {
 	g_sig = signal;
 }
 
-int	ft_kill(pid_t pid, int signal)
-{
-	if (signal == SIGUSR1)
-		ft_putstr_fd("SIGUSR1 sent!\n", STDOUT_FILENO);
-	if (signal == SIGUSR2)
-		ft_putstr_fd("SIGUSR2 sent!\n", STDOUT_FILENO);
-	return (kill(pid, signal));
-}
+// int	ft_kill(pid_t pid, int signal)
+// {
+// 	if (signal == SIGUSR1)
+// 		ft_putstr_fd("SIGUSR1 sent!\n", STDOUT_FILENO);
+// 	if (signal == SIGUSR2)
+// 		ft_putstr_fd("SIGUSR2 sent!\n", STDOUT_FILENO);
+// 	return (kill(pid, signal));
+// }
 
 static void	ft_send_data(pid_t pid, size_t data, unsigned long size)
 {
@@ -42,13 +42,18 @@ static void	ft_send_data(pid_t pid, size_t data, unsigned long size)
 			signal = SIGUSR1;
 		if (bit == 1)
 			signal = SIGUSR2;
-		if (ft_kill(pid, signal) == KILL_FAILE)
+		if (kill(pid, signal) == KILL_FAILE)
 		{
 			ft_putstr_fd("Failed to send!\n", STDERR_FILENO);
 			exit(SEND_ERROR);
 		}
 		pause();
-		usleep(100);
+		if (signal != g_sig)
+		{
+			ft_putstr_fd("Signal is incorrect!\n", STDERR_FILENO);
+			exit(SIG_ERROR);
+		}
+		usleep(200);
 		j++;
 	}
 }
@@ -58,8 +63,6 @@ static void	ft_send_str(pid_t pid, char *str)
 	size_t	str_len;
 	size_t	i;
 
-	if (str == NULL)
-		return ;
 	i = 0;
 	str_len = strlen(str);
 	ft_send_data(pid, str_len, sizeof(size_t) * BYTE);
@@ -86,8 +89,8 @@ static pid_t	ft_get_pid(char *s)
 
 int	main(int argc, char *argv[])
 {
-	signal(SIGUSR1, print_receive_signal);
-	signal(SIGUSR2, print_receive_signal);
+	signal(SIGUSR1, get_signal_from_server);
+	signal(SIGUSR2, get_signal_from_server);
 	if (argc != 3)
 	{
 		ft_putstr_fd("Invalid argument!\n", STDERR_FILENO);

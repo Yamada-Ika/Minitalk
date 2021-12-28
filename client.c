@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/27 16:05:01 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/28 13:07:05 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	ft_send_data(pid_t pid, size_t data, unsigned long size)
 			ft_putstr_fd("Failed to send!\n", STDERR_FILENO);
 			exit(SEND_ERROR);
 		}
-		usleep(SLEEP_TIME);
+		usleep(500);
 		j++;
 	}
 }

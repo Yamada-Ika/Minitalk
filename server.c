@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/27 15:41:09 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/28 16:30:05 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	ft_allocate_for_str(t_receive_info *rec)
 	ft_init_receive_info(rec, STR_LEN_SENT);
 }
 
-static void	sig_handler(int	signal)
+static void	ft_receive_signal(int	signal)
 {
 	g_sig = signal;
 }
@@ -60,8 +60,8 @@ int	main(void)
 	static t_receive_info	rec;
 
 	ft_printf("PID : %d\n", getpid());
-	signal(SIGUSR1, sig_handler);
-	signal(SIGUSR2, sig_handler);
+	signal(SIGUSR1, ft_receive_signal);
+	signal(SIGUSR2, ft_receive_signal);
 	while (true)
 	{
 		pause();
