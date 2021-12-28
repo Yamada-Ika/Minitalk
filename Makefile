@@ -10,14 +10,14 @@ PRINTF		:= $(addprefix $(PRINTF_DIR)/, $(PRINTF))
 NAME		:= Minitalk
 SERVER		:= server
 CLIENT		:= client
-SERVER_SRCS	:= server.c
-CLIENT_SRCS	:= client.c
+SERVER_SRCS	:= server.c utils.c
+CLIENT_SRCS	:= client.c utils.c
 HEADER		:= ft_minitalk.h
 
 # bonus
 ifdef WITH_BONUS
-SERVER_SRCS	:= server_bonus.c server_utils_bonus.c
-CLIENT_SRCS	:= client_bonus.c client_utils_bonus.c
+SERVER_SRCS	:= server_bonus.c server_utils_bonus.c utils_bonus.c
+CLIENT_SRCS	:= client_bonus.c utils_bonus.c
 HEADER		:= ft_minitalk_bonus.h
 endif
 

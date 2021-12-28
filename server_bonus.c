@@ -6,13 +6,13 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/28 17:26:13 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/28 19:22:08 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minitalk_bonus.h"
 
-volatile sig_atomic_t	g_sig;
+volatile sig_atomic_t	g_signal;
 
 static void	ft_print_str(t_receive_info *rec)
 {
@@ -29,24 +29,18 @@ static void	ft_allocate_for_str(t_receive_info *rec)
 	str_len = rec->decimal;
 	rec->str = (char *)malloc((str_len + 1) * sizeof(char));
 	if (rec->str == NULL)
-	{
-		ft_putstr_fd("Failed to memory allocate!\n", STDERR_FILENO);
-		exit(MEM_ERROR);
-	}
+		ft_error("Failed to memory allocate!", MEM_ERROR);
 	rec->str[str_len] = '\0';
 	ft_init_receive_info(rec, STR_LEN_SENT);
 }
 
 static void	ft_receive_signal(int sig, siginfo_t *info, void *ucontext)
 {
-	g_sig = sig;
+	g_signal = sig;
 	ucontext = NULL;
 	usleep(SLEEP_TIME);
 	if (kill(info->si_pid, sig) == KILL_FAILE)
-	{
-		ft_putstr_fd("Failed to send!\n", STDERR_FILENO);
-		exit(SEND_ERROR);
-	}
+		ft_error("Failed to send!", STDERR_FILENO);
 }
 
 static void	ft_set_signal_handler(struct sigaction *act,
@@ -69,7 +63,7 @@ int	main(void)
 	while (true)
 	{
 		pause();
-		rec.decimal += (g_sig - SIGUSR1) << rec.bit_cnt;
+		rec.decimal += (g_signal - SIGUSR1) << rec.bit_cnt;
 		rec.bit_cnt++;
 		if (!rec.is_len_sent && rec.bit_cnt == sizeof(size_t) * BYTE)
 			ft_allocate_for_str(&rec);
@@ -80,7 +74,7 @@ int	main(void)
 				ft_print_str(&rec);
 				continue ;
 			}
-			rec.str[rec.index] = (char)(rec.decimal);
+			rec.str[rec.index] = rec.decimal;
 			rec.index++;
 			ft_init_receive_info(&rec, CHAR_SENT);
 		}

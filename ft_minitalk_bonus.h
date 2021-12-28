@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:15:54 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/28 18:15:34 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/28 18:39:16 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@
 
 # include <sys/types.h>
 # include <signal.h>
-
 # include "ft_printf/ft_printf.h"
 
 typedef struct s_receive_info

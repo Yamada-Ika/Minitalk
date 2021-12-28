@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/28 17:26:01 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/28 19:22:32 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,9 @@ static void	ft_send_data(pid_t pid, size_t data, unsigned long size)
 	while (j < size)
 	{
 		bit = (data >> j) & 1;
-		if (bit == 0)
-			signal = SIGUSR1;
-		if (bit == 1)
-			signal = SIGUSR2;
+		signal = SIGUSR1 + bit;
 		if (kill(pid, signal) == KILL_FAILE)
-		{
-			ft_putstr_fd("Failed to send!\n", STDERR_FILENO);
-			exit(SEND_ERROR);
-		}
+			ft_error("Failed to send!", SEND_ERROR);
 		usleep(SLEEP_TIME);
 		j++;
 	}
@@ -41,10 +35,8 @@ static void	ft_send_str(pid_t pid, char *str)
 	size_t	str_len;
 	size_t	i;
 
-	if (str == NULL)
-		return ;
 	i = 0;
-	str_len = strlen(str);
+	str_len = ft_strlen(str);
 	ft_send_data(pid, str_len, sizeof(size_t) * BYTE);
 	while (i < str_len)
 	{
@@ -60,20 +52,14 @@ static pid_t	ft_get_pid(char *s)
 	char	*end;
 
 	pid = (pid_t)ft_strtoll(s, &end, 10);
-	if (strcmp(end, "") != 0 || pid <= PID_MIN)
-	{
-		ft_putstr_fd("Invalid PID!\n", STDERR_FILENO);
-		exit(ARG_ERROR);
-	}
+	if (ft_strcmp(end, "") != 0 || pid <= PID_MIN)
+		ft_error("Invalid PID!", ARG_ERROR);
 	return (pid);
 }
 
 int	main(int argc, char *argv[])
 {
 	if (argc != 3)
-	{
-		ft_putstr_fd("Invalid argument!\n", STDERR_FILENO);
-		return (ARG_ERROR);
-	}
+		ft_error("Invalid argument!", ARG_ERROR);
 	ft_send_str(ft_get_pid(argv[1]), argv[2]);
 }
