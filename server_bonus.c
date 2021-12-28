@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/28 16:40:14 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/28 16:59:57 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,14 @@ static void	ft_receive_signal(int sig, siginfo_t *info, void *ucontext)
 	}
 }
 
-static void	ft_set_signal_handler(sigaction *act,
+static void	ft_set_signal_handler(struct sigaction *act,
 	void (*handler)(int sig, siginfo_t *info, void *ucontext))
 {
-	sigemptyset(&act.sa_mask);
-	act.sa_sigaction = ft_receive_signal;
-	act.sa_flags = SA_SIGINFO;
-	sigaction(SIGUSR1, &act, NULL);
-	sigaction(SIGUSR2, &act, NULL);
+	sigemptyset(&(act->sa_mask));
+	act->sa_sigaction = handler;
+	act->sa_flags = SA_SIGINFO;
+	sigaction(SIGUSR1, act, NULL);
+	sigaction(SIGUSR2, act, NULL);
 }
 
 int	main(void)

@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/28 16:28:20 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/28 17:17:27 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,10 @@
 
 volatile sig_atomic_t	g_sig;
 
-void	get_signal_from_server(int signal)
+static void	get_signal_from_server(int signal)
 {
 	g_sig = signal;
 }
-
-// int	ft_kill(pid_t pid, int signal)
-// {
-// 	if (signal == SIGUSR1)
-// 		ft_putstr_fd("SIGUSR1 sent!\n", STDOUT_FILENO);
-// 	if (signal == SIGUSR2)
-// 		ft_putstr_fd("SIGUSR2 sent!\n", STDOUT_FILENO);
-// 	return (kill(pid, signal));
-// }
 
 static void	ft_send_data(pid_t pid, size_t data, unsigned long size)
 {
@@ -43,16 +34,10 @@ static void	ft_send_data(pid_t pid, size_t data, unsigned long size)
 		if (bit == 1)
 			signal = SIGUSR2;
 		if (kill(pid, signal) == KILL_FAILE)
-		{
-			ft_putstr_fd("Failed to send!\n", STDERR_FILENO);
-			exit(SEND_ERROR);
-		}
+			ft_error("Failed to send!\n", SEND_ERROR);
 		pause();
 		if (signal != g_sig)
-		{
-			ft_putstr_fd("Signal is incorrect!\n", STDERR_FILENO);
-			exit(SIG_ERROR);
-		}
+			ft_error("Signal is incorrect!\n", SEND_ERROR);
 		usleep(200);
 		j++;
 	}
@@ -73,6 +58,7 @@ static void	ft_send_str(pid_t pid, char *str)
 	}
 	ft_send_data(pid, EOT, BYTE);
 }
+
 static pid_t	ft_get_pid(char *s)
 {
 	pid_t	pid;

@@ -6,15 +6,17 @@ PRINTF_DIR	:= ft_printf
 PRINTF		:= libftprintf.a
 PRINTF		:= $(addprefix $(PRINTF_DIR)/, $(PRINTF))
 
+# minitalk
 NAME		:= Minitalk
 SERVER		:= server
 CLIENT		:= client
 SERVER_SRCS	:= server.c
 CLIENT_SRCS	:= client.c
 
+# bonus
 ifdef WITH_BONUS
-SERVER_SRCS		:= server_bonus.c
-CLIENT_SRCS		:= client_bonus.c
+SERVER_SRCS	:= server_bonus.c server_utils_bonus.c
+CLIENT_SRCS	:= client_bonus.c client_utils_bonus.c
 endif
 
 all: $(NAME)
@@ -39,7 +41,7 @@ clean:
 	rm -rf $(SERVER) $(CLIENT)
 
 fclean: clean
-	rm -rf $(SERVER) $(CLIENT)
+	make -C $(PRINTF_DIR) fclean
 
 re: fclean all
 

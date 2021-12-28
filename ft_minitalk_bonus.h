@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/17 10:15:54 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/28 16:29:07 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/28 17:00:38 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,8 @@ typedef struct s_receive_info
 	char	*str;
 	size_t	index;
 }	t_receive_info;
+
+void	ft_init_receive_info(t_receive_info *rec, int flag);
+void	ft_error(char *fmt, int status);
 
 #endif
