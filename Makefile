@@ -12,11 +12,13 @@ SERVER		:= server
 CLIENT		:= client
 SERVER_SRCS	:= server.c
 CLIENT_SRCS	:= client.c
+HEADER		:= ft_minitalk.h
 
 # bonus
 ifdef WITH_BONUS
 SERVER_SRCS	:= server_bonus.c server_utils_bonus.c
 CLIENT_SRCS	:= client_bonus.c client_utils_bonus.c
+HEADER		:= ft_minitalk_bonus.h
 endif
 
 all: $(NAME)
@@ -28,10 +30,10 @@ $(PRINTF): empty
 
 empty:
 
-$(SERVER): $(SERVER_SRCS)
+$(SERVER): $(SERVER_SRCS) $(HEADER)
 	$(CC) -o $(SERVER) $(CFLAGS) $(SERVER_SRCS) $(PRINTF)
 
-$(CLIENT): $(CLIENT_SRCS)
+$(CLIENT): $(CLIENT_SRCS) $(HEADER)
 	$(CC) -o $(CLIENT) $(CFLAGS) $(CLIENT_SRCS) $(PRINTF)
 
 bonus:
