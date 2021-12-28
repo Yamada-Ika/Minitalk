@@ -1,0 +1,7 @@
+a.out
+main.c
+.vscode/
+.test/*dSYM
+printfTester
+*.a
+test
