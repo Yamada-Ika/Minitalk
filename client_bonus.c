@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/28 17:17:27 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/28 18:10:08 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ static void	ft_send_data(pid_t pid, size_t data, unsigned long size)
 			ft_error("Failed to send!\n", SEND_ERROR);
 		pause();
 		if (signal != g_sig)
-			ft_error("Signal is incorrect!\n", SEND_ERROR);
-		usleep(200);
+			ft_error("Signal is incorrect!\n", SIG_ERROR);
+		usleep(SLEEP_TIME);
 		j++;
 	}
 }

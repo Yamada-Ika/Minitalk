@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/28 16:59:57 by iyamada          ###   ########.fr       */
+/*   Updated: 2021/12/28 17:26:13 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	ft_receive_signal(int sig, siginfo_t *info, void *ucontext)
 {
 	g_sig = sig;
 	ucontext = NULL;
-	usleep(200);
+	usleep(SLEEP_TIME);
 	if (kill(info->si_pid, sig) == KILL_FAILE)
 	{
 		ft_putstr_fd("Failed to send!\n", STDERR_FILENO);
