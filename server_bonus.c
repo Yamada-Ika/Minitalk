@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/28 19:22:08 by iyamada          ###   ########.fr       */
+/*   Updated: 2022/01/03 14:02:47 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,7 @@ volatile sig_atomic_t	g_signal;
 
 static void	ft_print_str(t_receive_info *rec)
 {
-	ft_putstr(rec->str);
-	ft_putchar('\n');
+	ft_putendl_fd(rec->str, STDOUT_FILENO);
 	free(rec->str);
 	ft_init_receive_info(rec, STR_SENT);
 }
@@ -34,7 +33,7 @@ static void	ft_allocate_for_str(t_receive_info *rec)
 	ft_init_receive_info(rec, STR_LEN_SENT);
 }
 
-static void	ft_receive_signal(int sig, siginfo_t *info, void *ucontext)
+static void	ft_get_signal(int sig, siginfo_t *info, void *ucontext)
 {
 	g_signal = sig;
 	ucontext = NULL;
@@ -59,7 +58,7 @@ int	main(void)
 	static t_receive_info	rec;
 
 	ft_printf("PID : %d\n", getpid());
-	ft_set_signal_handler(&act, ft_receive_signal);
+	ft_set_signal_handler(&act, ft_get_signal);
 	while (true)
 	{
 		pause();

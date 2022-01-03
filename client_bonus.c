@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:11 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/28 19:22:26 by iyamada          ###   ########.fr       */
+/*   Updated: 2022/01/03 14:04:00 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ static void	ft_send_data(pid_t pid, size_t data, unsigned long size)
 		bit = (data >> j) & 1;
 		signal = SIGUSR1 + bit;
 		if (kill(pid, signal) == KILL_FAILE)
-			ft_error("Failed to send!\n", SEND_ERROR);
+			ft_error("Failed to send!", SEND_ERROR);
 		pause();
 		if (signal != g_signal)
-			ft_error("Signal is incorrect!\n", SIG_ERROR);
+			ft_error("Signal is incorrect!", SIG_ERROR);
 		usleep(SLEEP_TIME);
 		j++;
 	}
@@ -72,6 +72,6 @@ int	main(int argc, char *argv[])
 	signal(SIGUSR1, get_signal_from_server);
 	signal(SIGUSR2, get_signal_from_server);
 	if (argc != 3)
-		ft_error("Invalid argument!\n", ARG_ERROR);
+		ft_error("Invalid argument!", ARG_ERROR);
 	ft_send_str(ft_get_pid(argv[1]), argv[2]);
 }

@@ -6,7 +6,7 @@
 /*   By: iyamada <iyamada@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 09:26:13 by iyamada           #+#    #+#             */
-/*   Updated: 2021/12/28 18:52:55 by iyamada          ###   ########.fr       */
+/*   Updated: 2022/01/03 14:01:38 by iyamada          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,7 @@ static void	ft_init_receive_info(t_receive_info *rec, int flag)
 
 static void	ft_print_str(t_receive_info *rec)
 {
-	ft_putstr(rec->str);
-	ft_putchar('\n');
+	ft_putendl_fd(rec->str, STDOUT_FILENO);
 	free(rec->str);
 	ft_init_receive_info(rec, STR_SENT);
 }
@@ -47,7 +46,7 @@ static void	ft_allocate_for_str(t_receive_info *rec)
 	ft_init_receive_info(rec, STR_LEN_SENT);
 }
 
-static void	ft_receive_signal(int	signal)
+static void	ft_get_signal(int	signal)
 {
 	g_signal = signal;
 }
@@ -57,8 +56,8 @@ int	main(void)
 	static t_receive_info	rec;
 
 	ft_printf("PID : %d\n", getpid());
-	signal(SIGUSR1, ft_receive_signal);
-	signal(SIGUSR2, ft_receive_signal);
+	signal(SIGUSR1, ft_get_signal);
+	signal(SIGUSR2, ft_get_signal);
 	while (true)
 	{
 		pause();
